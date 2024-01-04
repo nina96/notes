@@ -80,3 +80,23 @@ Detecting barcodes in manually written and scanned documents poses some challeng
    - Define appropriate metrics for evaluating the model's performance, considering partial detections and false positives.
 
 Remember that there is no one-size-fits-all solution, and it may require experimentation and iteration to find the best approach for your specific use case. Additionally, combining multiple methods in a hybrid approach may enhance the robustness of barcode detection in diverse scenarios.
+
+
+
+to split the pdf 
+# Load the PDF file
+with pdfplumber.open("input.pdf") as pdf:
+    # Get the page numbers of the barcodes
+    barcode_pages = [page.page_number for page in pdf.pages if detect_barcode(page.image)]
+
+    # Split the PDF into multiple parts
+    for i in range(len(barcode_pages) - 1):
+        start_page = barcode_pages[i]
+        end_page = barcode_pages[i + 1] - 1
+
+        # Get the pages to be split
+        pages = pdf.pages[start_page:end_page]
+
+        # Save the split PDF file
+        with open(f"split_{i + 1}.pdf", "wb") as f:
+            pages.write(f)
